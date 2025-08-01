@@ -3,9 +3,9 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
    Name = "Nosch Hub",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "NEBULA HUB",
-   LoadingSubtitle = "simple",
-   ShowText = "NEBULA HUB", -- for mobile users to unhide rayfield, change if you'd like
+   LoadingTitle = "Nosch HUB",
+   LoadingSubtitle = "by Nosch",
+   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
@@ -20,8 +20,8 @@ local Window = Rayfield:CreateWindow({
    },
 
    Discord = {
-      Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "hqDa2VCckK", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
    },
 
@@ -191,7 +191,64 @@ end)
    end,
 })
 
+local Button = MainTab:CreateButton({
+   Name = "Car Fly",
+   Callback = function()
+   local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local vehicleSeat = nil
+local flying = true -- direkt an
+
+local speed = 100 -- Fluggeschwindigkeit
+
+local function findVehicleSeat()
+    local char = player.Character
+    if not char then return nil end
+    for _, part in pairs(char:GetChildren()) do
+        if part:IsA("VehicleSeat") then
+            return part
+        end
+    end
+    return nil
+end
+
+vehicleSeat = findVehicleSeat()
+
+RunService.RenderStepped:Connect(function(dt)
+    if flying and vehicleSeat then
+        local moveDirection = Vector3.new(0,0,0)
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+            moveDirection = moveDirection + workspace.CurrentCamera.CFrame.LookVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+            moveDirection = moveDirection - workspace.CurrentCamera.CFrame.LookVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+            moveDirection = moveDirection - workspace.CurrentCamera.CFrame.RightVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+            moveDirection = moveDirection + workspace.CurrentCamera.CFrame.RightVector
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            moveDirection = moveDirection + Vector3.new(0,1,0)
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+            moveDirection = moveDirection - Vector3.new(0,1,0)
+        end
+
+        if moveDirection.Magnitude > 0 then
+            moveDirection = moveDirection.Unit
+            local newPos = vehicleSeat.Parent.PrimaryPart.Position + moveDirection * speed * dt
+            vehicleSeat.Parent:SetPrimaryPartCFrame(CFrame.new(newPos, newPos + workspace.CurrentCamera.CFrame.LookVector))
+        end
+    end
+end)
 
    end,
 })
