@@ -47,46 +47,53 @@ Rayfield:Notify({
    Image = nil,
 })
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-
-local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local HRP = Character:WaitForChild("HumanoidRootPart")
-local Humanoid = Character:WaitForChild("Humanoid")
-
-local SpeedhackEnabled = true
-local SpeedMultiplier = 1.3 -- default
-
--- UI: Slider für SpeedMultiplier
 local Slider = Tab:CreateSlider({
-   Name = "Speed Multiplier",
-   Range = {1, 5},
-   Increment = 0.1,
-   Suffix = "x",
-   CurrentValue = SpeedMultiplier,
-   Flag = "SpeedMultiplierSlider",
-   Callback = function(Value)
-       SpeedMultiplier = Value
-   end,
+    Name = "Speed Multiplier",
+    Range = {1, 5},
+    Increment = 0.1,
+    Suffix = "x",
+    CurrentValue = 1.3,
+    Flag = "SpeedMultiplierSlider",
+    Callback = function(Value)
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local UIS = game:GetService("UserInputService")
+
+        local LocalPlayer = Players.LocalPlayer
+        local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local HRP = Character:WaitForChild("HumanoidRootPart")
+        local Humanoid = Character:WaitForChild("Humanoid")
+
+        local SpeedhackEnabled = true
+        local SpeedMultiplier = Value
+
+        -- Toggle per Taste T
+        UIS.InputBegan:Connect(function(input, gp)
+            if gp then return end
+            if input.KeyCode == Enum.KeyCode.T then
+                SpeedhackEnabled = not SpeedhackEnabled
+                speedToggle:Set(SpeedhackEnabled)  -- falls du das UI hast
+            end
+        end)
+
+        -- Movement mit Speedhack
+        RunService.RenderStepped:Connect(function(dt)
+            if SpeedhackEnabled and Humanoid.MoveDirection.Magnitude > 0 then
+                local moveDir = Humanoid.MoveDirection.Unit
+                local speed = Humanoid.WalkSpeed * (SpeedMultiplier - 1)
+                HRP.CFrame = HRP.CFrame + (moveDir * speed * dt)
+            end
+        end)
+
+        -- Auto-Fix bei Respawn
+        LocalPlayer.CharacterAdded:Connect(function(char)
+            Character = char
+            HRP = char:WaitForChild("HumanoidRootPart")
+            Humanoid = char:WaitForChild("Humanoid")
+        end)
+    end,
 })
 
--- Movement mit Speedhack
-RunService.RenderStepped:Connect(function(dt)
-    if SpeedhackEnabled and Humanoid.MoveDirection.Magnitude > 0 then
-        local moveDir = Humanoid.MoveDirection.Unit
-        local speed = Humanoid.WalkSpeed * (SpeedMultiplier - 1)
-        HRP.CFrame = HRP.CFrame + (moveDir * speed * dt)
-    end
-end)
-
--- Auto-Fix bei Respawn
-LocalPlayer.CharacterAdded:Connect(function(char)
-    Character = char
-    HRP = char:WaitForChild("HumanoidRootPart")
-    Humanoid = char:WaitForChild("Humanoid")
-end)
 
 
 local Button = MainTab:CreateButton({
@@ -451,4 +458,3 @@ LocalPlayer.CharacterAdded:Connect(function(char)
         deactivateAuraFarming(char)
     end
 end)
-
