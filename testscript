@@ -47,10 +47,7 @@ Rayfield:Notify({
    Image = nil,
 })
 
-local Button = MainTab:CreateButton({
-   Name = "+WalkSpeed",
-   Callback = function()
-   local Players = game:GetService("Players")
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 
@@ -60,45 +57,46 @@ local HRP = Character:WaitForChild("HumanoidRootPart")
 local Humanoid = Character:WaitForChild("Humanoid")
 
 local SpeedhackEnabled = true
-local SpeedMultiplier = 1.3 -- default 
+local SpeedMultiplier = 1.3 -- default
 
-local function getMoveDirection()
-    local moveDir = Humanoid.MoveDirection
-    if moveDir.Magnitude > 0 then
-        return moveDir.Unit
-    end
-    return nil
-end
+-- UI: Slider für SpeedMultiplier
+local Slider = Tab:CreateSlider({
+   Name = "Speed Multiplier",
+   Range = {1, 5},
+   Increment = 0.1,
+   Suffix = "x",
+   CurrentValue = SpeedMultiplier,
+   Flag = "SpeedMultiplierSlider",
+   Callback = function(Value)
+       SpeedMultiplier = Value
+   end,
+})
 
--- // T to toggle \\ --
+-- Toggle per Taste T
 UIS.InputBegan:Connect(function(input, gp)
     if gp then return end
     if input.KeyCode == Enum.KeyCode.T then
         SpeedhackEnabled = not SpeedhackEnabled
-        speedToggle:Set(SpeedhackEnabled)
+        speedToggle:Set(SpeedhackEnabled)  -- Wenn du ein Toggle-UI hast, das du aktualisieren willst
     end
 end)
 
--- // Movement \\ --
+-- Movement mit Speedhack
 RunService.RenderStepped:Connect(function(dt)
     if SpeedhackEnabled and Humanoid.MoveDirection.Magnitude > 0 then
-        local moveDir = getMoveDirection()
-        if moveDir then
-            local speed = Humanoid.WalkSpeed * (SpeedMultiplier - 1)
-            HRP.CFrame = HRP.CFrame + (moveDir * speed * dt)
-        end
+        local moveDir = Humanoid.MoveDirection.Unit
+        local speed = Humanoid.WalkSpeed * (SpeedMultiplier - 1)
+        HRP.CFrame = HRP.CFrame + (moveDir * speed * dt)
     end
 end)
 
--- Auto-Fix on Respawn
+-- Auto-Fix bei Respawn
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
     HRP = char:WaitForChild("HumanoidRootPart")
     Humanoid = char:WaitForChild("Humanoid")
 end)
 
-   end,
-})
 
 local Button = MainTab:CreateButton({
    Name = "ESP",
@@ -288,13 +286,84 @@ RunService.Heartbeat:Connect(function()
 end)
 
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local RootPart = Character:WaitForChild("HumanoidRootPart")
+
+local ATTACK_DISTANCE = 10
+local KillAuraEnabled = false -- Start aus
+
+-- Deine GUI-Toggle-Logik
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+local Character = nil
+local Humanoid = nil
+local RootPart = nil
+
+local ATTACK_DISTANCE = 10
+local KillAuraEnabled = false
+
+-- Character-Updater
+local function updateCharacter()
+    Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    Humanoid = Character:WaitForChild("Humanoid")
+    RootPart = Character:WaitForChild("HumanoidRootPart")
+end
+
+-- Initial Setup
+updateCharacter()
+LocalPlayer.CharacterAdded:Connect(updateCharacter)
+
+-- GUI Toggle
+local Toggle = MainTab:CreateToggle({
+    Name = "Kill Aura",
+    CurrentValue = false,
+    Flag = "KillAuraToggle",
+    Callback = function(Value)
+        KillAuraEnabled = Value
+    end,
+})
+
+-- Angriffsfunktion
+local function attack(targetHumanoid)
+    if targetHumanoid and targetHumanoid.Health > 0 then
+        targetHumanoid:TakeDamage(20)
+    end
+end
+
+-- Kill Aura Loop
+RunService.Heartbeat:Connect(function()
+    if not KillAuraEnabled or not RootPart then return end
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character:FindFirstChild("HumanoidRootPart") then
+            local targetHumanoid = player.Character.Humanoid
+            local targetRoot = player.Character.HumanoidRootPart
+            local distance = (RootPart.Position - targetRoot.Position).Magnitude
+
+            -- Angriff nur wenn Gegner wirklich lebt
+            if distance <= ATTACK_DISTANCE and targetHumanoid.Health > 0 and targetHumanoid:GetState() ~= Enum.HumanoidStateType.Dead then
+                attack(targetHumanoid)
+            end
+        end
+    end
+end)
+
+end
+
+local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 
 local LocalPlayer = Players.LocalPlayer
 local AuraFarmingEnabled = false
 
 -- 🛠️ Toggle UI (an dein UI-System anpassen, z. B. Rayfield oder Kavo)
-local Toggle = MainTab:CreateToggle({
+local Toggle = MainTab:CreateToggle({q
     Name = "AURA FARMING",
     CurrentValue = false,
     Flag = "AuraFarmingToggle",
@@ -391,3 +460,4 @@ LocalPlayer.CharacterAdded:Connect(function(char)
         deactivateAuraFarming(char)
     end
 end)
+
