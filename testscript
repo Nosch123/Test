@@ -190,3 +190,46 @@ end)
 
    end,
 })
+
+local Toggle = Tab:CreateToggle({
+   Name = "Toggle Example",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+   local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local function getClosestTarget()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+            local headPos, onScreen = Camera:WorldToViewportPoint(player.Character.Head.Position)
+            if onScreen then
+                local mousePos = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
+                local targetPos = Vector2.new(headPos.X, headPos.Y)
+                local distance = (mousePos - targetPos).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+RunService.RenderStepped:Connect(function()
+    local target = getClosestTarget()
+    if target and target.Character and target.Character:FindFirstChild("Head") then
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Character.Head.Position)
+    end
+end)
+
+   end,
+})
