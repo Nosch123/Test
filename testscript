@@ -72,15 +72,6 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
--- Toggle per Taste T
-UIS.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == Enum.KeyCode.T then
-        SpeedhackEnabled = not SpeedhackEnabled
-        speedToggle:Set(SpeedhackEnabled)  -- Wenn du ein Toggle-UI hast, das du aktualisieren willst
-    end
-end)
-
 -- Movement mit Speedhack
 RunService.RenderStepped:Connect(function(dt)
     if SpeedhackEnabled and Humanoid.MoveDirection.Magnitude > 0 then
