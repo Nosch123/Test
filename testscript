@@ -288,3 +288,33 @@ local Toggle = MainTab:CreateToggle({
        end
    end,
 })
+
+-- Toggle in deiner GUI
+local Toggle = MainTab:CreateToggle({
+    Name = "invincibility",
+    CurrentValue = false,
+    Flag = "SelfReviveToggle",
+    Callback = function(Value)
+        SelfReviveEnabled = Value
+    end,
+})
+
+-- Funktion, die deine Gesundheit wiederherstellt
+local function keepAlive()
+    local character = LocalPlayer.Character
+    if not character then return end
+
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+
+    if humanoid.Health < humanoid.MaxHealth then
+        humanoid.Health = humanoid.MaxHealth
+    end
+end
+
+-- Wiederholtes Heilen, solange Toggle aktiv
+RunService.Heartbeat:Connect(function()
+    if SelfReviveEnabled then
+        keepAlive()
+    end
+end)
