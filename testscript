@@ -289,6 +289,10 @@ local Toggle = MainTab:CreateToggle({
    end,
 })
 
+local Tab = Window:CreateTab("🛠️Test Version", nil) -- Title, Image
+
+local Section = Tab:CreateSection("Main")
+
 -- Toggle in deiner GUI
 local Toggle = MainTab:CreateToggle({
     Name = "invincibility",
