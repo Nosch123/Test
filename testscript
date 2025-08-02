@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "XYLO HUB",
+   Name = "XYLO Test version",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "XYLO HUB",
    LoadingSubtitle = "Test Version",
@@ -42,7 +42,7 @@ local Section = MainTab:CreateSection("Main")
 
 Rayfield:Notify({
    Title = "Execution succesed!",
-   Content = "Wow, you SIGMA executed the script",
+   Content = "Test version executed!",
    Duration = 6.5,
    Image = nil,
 })
