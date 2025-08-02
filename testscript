@@ -427,3 +427,35 @@ LocalPlayer.CharacterAdded:Connect(function(char)
         deactivateAuraFarming(char)
     end
 end)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+-- Funktion zur Aktualisierung
+local function updateJumpPower(value)
+    if Humanoid then
+        Humanoid.JumpPower = value
+    end
+end
+
+-- Bei Respawn JumpPower erneut setzen
+LocalPlayer.CharacterAdded:Connect(function(char)
+    local newHumanoid = char:WaitForChild("Humanoid")
+    Humanoid = newHumanoid
+    newHumanoid.JumpPower = Slider.CurrentValue
+end)
+
+-- UI Slider
+local Slider = TestTab:CreateSlider({ 
+   Name = "Jump Power", 
+   Range = {0, 100},
+   Increment = 10,
+   Suffix = "JP", -- kannst wieder "Bananas" machen lol
+   CurrentValue = 10,
+   Flag = "Slider1",
+   Callback = function(Value)
+       updateJumpPower(Value)
+   end,
+})
