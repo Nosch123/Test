@@ -289,12 +289,12 @@ local Toggle = MainTab:CreateToggle({
    end,
 })
 
-local Tab = Window:CreateTab("🛠️Test Version", nil) -- Title, Image
+local TestTab = Window:CreateTab("🛠️Test Version", nil) -- Title, Image
 
-local Section = Tab:CreateSection("Main")
+local Section = TestTab:CreateSection("Main")
 
 -- Toggle in deiner GUI
-local Toggle = MainTab:CreateToggle({
+local Toggle = TestTab:CreateToggle({
     Name = "invincibility",
     CurrentValue = false,
     Flag = "SelfReviveToggle",
@@ -330,7 +330,7 @@ local LocalPlayer = Players.LocalPlayer
 local AuraFarmingEnabled = false
 
 -- 🛠️ Toggle UI (an dein UI-System anpassen, z. B. Rayfield oder Kavo)
-local Toggle = MainTab:CreateToggle({
+local Toggle = TestTab:CreateToggle({
     Name = "AURA FARMING",
     CurrentValue = false,
     Flag = "AuraFarmingToggle",
