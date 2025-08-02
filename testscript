@@ -450,7 +450,7 @@ end)
 -- UI Slider
 local Slider = TestTab:CreateSlider({ 
    Name = "Jump Power", 
-   Range = {0, 100},
+   Range = {0, 1000},
    Increment = 10,
    Suffix = "JP", -- kannst wieder "Bananas" machen lol
    CurrentValue = 10,
