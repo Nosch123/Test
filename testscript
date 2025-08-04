@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "XYLO HUB V.0.17 TEST VERSION",
+   Name = "XYLO HUB V.0.18 TEST VERSION",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "XYLO HUB",
    LoadingSubtitle = "Test Version",
@@ -70,47 +70,6 @@ local Slider = MainTab:CreateSlider({
     Callback = function(Value)
         SpeedMultiplier = Value
     end,
-})
-
--- // T to toggle \\ --
-UIS.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == Enum.KeyCode.T then
-        SpeedhackEnabled = not SpeedhackEnabled
-        print("Speedhack: " .. (SpeedhackEnabled and "Aktiviert" or "Deaktiviert"))
-    end
-end)
-
--- // Movement Hack \\ --
-RunService.RenderStepped:Connect(function(dt)
-    if SpeedhackEnabled and Humanoid.MoveDirection.Magnitude > 0 then
-        local moveDir = Humanoid.MoveDirection.Unit
-        local speedBoost = Humanoid.WalkSpeed * (SpeedMultiplier - 1)
-        HRP.CFrame = HRP.CFrame + (moveDir * speedBoost * dt)
-    end
-end)
-
--- // Auto-Fix on Respawn \\ --
-LocalPlayer.CharacterAdded:Connect(function(char)
-    Character = char
-    HRP = char:WaitForChild("HumanoidRootPart")
-    Humanoid = char:WaitForChild("Humanoid")
-end)
-
-
-local Button = MainTab:CreateButton({
-   Name = "Reset Walkspeed",
-   Callback = function()
-   local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-
--- 🏃‍♂️ Reset WalkSpeed auf Roblox-Standard
-Humanoid.WalkSpeed = 16
-
-
-   end,
 })
 
 local Players = game:GetService("Players")
