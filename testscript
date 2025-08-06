@@ -467,7 +467,7 @@ local TotalClicksIn20s = 2000000  -- Beispiel: 200 Klicks in 20 Sekunden → 10 
 local autoclickEnabled = false
 
 local Toggle = TestTab:CreateToggle({ 
-    Name = "Autoclick", 
+    Name = "Autoclicker (race clicker)", 
     CurrentValue = false,
     Flag = "AC",
     Callback = function(Value)
