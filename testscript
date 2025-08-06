@@ -459,3 +459,20 @@ local Slider = TestTab:CreateSlider({
        updateJumpPower(Value)
    end,
 })
+
+local Button = TestTab:CreateButton({ 
+    Name = "Autoclick", 
+    Callback = function()
+        for i = 1, 1000 do
+            game:GetService("ReplicatedStorage")
+                :WaitForChild("Packages")
+                :WaitForChild("Knit")
+                :WaitForChild("Services")
+                :WaitForChild("ClickService")
+                :WaitForChild("RF")
+                :WaitForChild("Click")
+                :InvokeServer()
+            task.wait() -- verhindert Disconnects oder Server-Lag
+        end
+    end,
+})
