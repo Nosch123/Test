@@ -460,19 +460,35 @@ local Slider = TestTab:CreateSlider({
    end,
 })
 
-local Button = TestTab:CreateButton({ 
+-- EINSTELLUNG: Wieviele Klicks in 20 Sekunden?
+local TotalClicksIn20s = 2000000  -- Beispiel: 200 Klicks in 20 Sekunden → 10 Klicks pro Sekunde
+
+-- Interne Variablen
+local autoclickEnabled = false
+
+local Toggle = TestTab:CreateToggle({ 
     Name = "Autoclick", 
-    Callback = function()
-        for i = 1, 1000 do
-            game:GetService("ReplicatedStorage")
-                :WaitForChild("Packages")
-                :WaitForChild("Knit")
-                :WaitForChild("Services")
-                :WaitForChild("ClickService")
-                :WaitForChild("RF")
-                :WaitForChild("Click")
-                :InvokeServer()
-            task.wait() -- verhindert Disconnects oder Server-Lag
-        end
+    CurrentValue = false,
+    Flag = "AC",
+    Callback = function(Value)
+        autoclickEnabled = Value
+
+        task.spawn(function()
+            -- Berechne Delay zwischen den Klicks basierend auf Gesamtanzahl in 20 Sekunden
+            local delay = 20 / TotalClicksIn20s  -- z. B. 20/200 = 0.1s zwischen Klicks
+
+            while autoclickEnabled do
+                game:GetService("ReplicatedStorage")
+                    :WaitForChild("Packages")
+                    :WaitForChild("Knit")
+                    :WaitForChild("Services")
+                    :WaitForChild("ClickService")
+                    :WaitForChild("RF")
+                    :WaitForChild("Click")
+                    :InvokeServer()
+
+                task.wait(delay)
+            end
+        end)
     end,
 })
