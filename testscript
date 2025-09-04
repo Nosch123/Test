@@ -1,36 +1,40 @@
-if game:GetService("RbxAnalyticsService") then
-    local clientId = game:GetService("RbxAnalyticsService"):GetClientId() 
+-- Korrigierte Version mit pcall
+local success, analyticsService = pcall(function()
+    return game:GetService("RbxAnalyticsService")
+end)
 
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+if success then
+    local clientId = analyticsService:GetClientId() 
 
-WindUI:Popup({
-    Title = "XYLO HUB | ClientID",
-    Icon = "info",
-    Content = clientId,
-    Buttons = {
-        {
-            Title = "Cancel",
-            Callback = function() end,
-            Variant = "Tertiary",
-        },
-        {
-            Title = "Copy",
-            Icon = "square",
-            Callback = function() 
+    local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
-     setclipboard(clientId)
-
-WindUI:Notify({
-    Title = "Copied ClientID",
-    Content = "Succesfully copied the ClientID, you can now paste it in the discord",
-    Duration = 5, -- 5 seconds
-    Icon = "square",
-})
-
-end,
-            Variant = "Primary",
+    WindUI:Popup({
+        Title = "XYLO HUB | ClientID",
+        Icon = "info",
+        Content = clientId,
+        Buttons = {
+            {
+                Title = "Cancel",
+                Callback = function() end,
+                Variant = "Tertiary",
+            },
+            {
+                Title = "Copy",
+                Icon = "square",
+                Callback = function() 
+                    setclipboard(clientId)
+                    WindUI:Notify({
+                        Title = "Copied ClientID",
+                        Content = "Succesfully copied the ClientID, you can now paste it in the discord",
+                        Duration = 5,
+                        Icon = "square",
+                    })
+                end,
+                Variant = "Primary",
+            }
         }
-    }
-})
-
+    })
+else
+    -- Optional: Fehlerbehandlung falls der Service nicht verfügbar ist
+    warn("RbxAnalyticsService is not available")
 end
