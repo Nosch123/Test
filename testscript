@@ -1,9 +1,12 @@
+if game:GetService("RbxAnalyticsService") then
+    local clientId = game:GetService("RbxAnalyticsService"):GetClientId() 
+
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:Popup({
-    Title = "ClientID",
+    Title = "XYLO HUB | ClientID",
     Icon = "info",
-    Content = "Popup content",
+    Content = clientId,
     Buttons = {
         {
             Title = "Cancel",
@@ -15,9 +18,7 @@ WindUI:Popup({
             Icon = "square",
             Callback = function() 
 
-if game:GetService("RbxAnalyticsService") then
-    local clientId = game:GetService("RbxAnalyticsService"):GetClientId() 
-    setclipboard(clientId)
+     setclipboard(clientId)
 
 WindUI:Notify({
     Title = "Copied ClientID",
